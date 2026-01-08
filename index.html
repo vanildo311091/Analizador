@@ -10,22 +10,18 @@
         :root { --primary: #d32f2f; --bg: #0f0f0f; --card: #1a1a1a; --text: #e0e0e0; --green: #4caf50; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
         .container { max-width: 500px; margin: auto; }
-        
         .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: var(--card); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid #333; }
         .stat-card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; }
         .stat-card div { font-size: 16px; font-weight: bold; margin-top: 5px; color: var(--primary); }
-
         .btn-trigger { background: var(--primary); color: white; border: none; padding: 35px 20px; width: 100%; border-radius: 20px; font-size: 22px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 8px 25px rgba(211, 47, 47, 0.4); margin-bottom: 15px; }
         .btn-trigger:active { transform: scale(0.95); background: #b71c1c; }
-
         #monitor-status { background: #222; padding: 25px; border-radius: 15px; text-align: center; border-left: 6px solid #444; margin-bottom: 20px; }
         .alerta-ativo { border-left-color: var(--green) !important; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { background: #222; } 50% { background: #1b331c; } 100% { background: #222; } }
-
         .history { background: #151515; padding: 15px; border-radius: 12px; height: 180px; overflow-y: auto; font-family: monospace; font-size: 13px; border: 1px solid #222; }
         .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; }
-        .btn-small { background: transparent; color: #666; border: 1px solid #444; padding: 10px; border-radius: 8px; flex: 1; margin: 0 5px; }
+        .btn-small { background: transparent; color: #666; border: 1px solid #444; padding: 10px; border-radius: 8px; flex: 1; margin: 0 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -47,4 +43,99 @@
     </div>
 
     <div style="display: flex; margin-bottom: 20px;">
-        <button class="btn-small" onclick="des
+        <button class="btn-small" onclick="desfazer()">Desfazer</button>
+        <button class="btn-small" onclick="limpar()" style="color: #f44336;">Limpar Tudo</button>
+    </div>
+
+    <div class="history" id="historico"></div>
+</div>
+
+<script>
+    let registros = [];
+    let alertaEnviado = false;
+    const TOKEN = '7611634590:AAHo8X_T25T4S5K3e-7M4Vp_P9S_r7Y_zEw'; 
+    const CHAT_ID = '6757113885'; 
+
+    async function enviarTelegram(msg) {
+        const textoFinal = `🌸 RADAR VELA ROSA 🌸\n\n${msg}\n\n🕒 Hora: ${new Date().toLocaleTimeString('pt-BR')}`;
+        const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(textoFinal)}`;
+        try { await fetch(url); } catch(e) { console.error("Erro Telegram"); }
+    }
+
+    function registrar() {
+        const agora = new Date();
+        registros.unshift(agora);
+        alertaEnviado = false;
+        analisar();
+        atualizarUI();
+    }
+
+    function analisar() {
+        if (registros.length < 2) {
+            document.getElementById('frequencia').innerText = "-";
+            document.getElementById('intervalo').innerText = "-";
+            document.getElementById('estimativa').innerText = "--:--";
+            return;
+        }
+        let soma = 0;
+        for (let i = 0; i < registros.length - 1; i++) { soma += (registros[i] - registros[i+1]); }
+        const mediaMs = soma / (registros.length - 1);
+        document.getElementById('frequencia').innerText = (mediaMs / 60000).toFixed(1) + "m";
+        document.getElementById('intervalo').innerText = ((registros[0] - registros[1]) / 60000).toFixed(1) + "m";
+        const proxEst = new Date(registros[0].getTime() + mediaMs);
+        document.getElementById('estimativa').innerText = proxEst.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function atualizarUI() {
+        const histDiv = document.getElementById('historico');
+        histDiv.innerHTML = registros.map((d, i) => `
+            <div class="row"><span>Vela #${registros.length - i}</span> <span>${d.toLocaleTimeString()}</span></div>
+        `).join('');
+    }
+
+    function desfazer() { 
+        if (registros.length > 0) {
+            registros.shift(); 
+            analisar(); 
+            atualizarUI(); 
+        }
+    }
+
+    function limpar() { 
+        if(confirm("Deseja resetar todos os dados?")) { 
+            registros = []; 
+            document.getElementById('frequencia').innerText = "-";
+            document.getElementById('intervalo').innerText = "-";
+            document.getElementById('estimativa').innerText = "--:--";
+            document.getElementById('msg-status').innerText = "AGUARDANDO DADOS...";
+            document.getElementById('monitor-status').classList.remove('alerta-ativo');
+            atualizarUI(); 
+        } 
+    }
+
+    setInterval(() => {
+        if (registros.length < 2) return;
+        const agora = new Date();
+        const soma = (registros[0] - registros[registros.length - 1]) / (registros.length - 1);
+        const tempoDesdeUltima = agora - registros[0];
+        const statusBox = document.getElementById('monitor-status');
+        const msgLabel = document.getElementById('msg-status');
+
+        if (tempoDesdeUltima >= (soma - 60000) && tempoDesdeUltima <= (soma + 120000)) {
+            statusBox.classList.add('alerta-ativo');
+            msgLabel.innerText = "🔥 ZONA DE PROBABILIDADE";
+            msgLabel.style.color = "#4caf50";
+            if (!alertaEnviado) { enviarTelegram("ZONA DE ROSA DETECTADA!"); alertaEnviado = true; }
+        } else if (tempoDesdeUltima > (soma + 120000)) {
+            statusBox.classList.remove('alerta-ativo');
+            msgLabel.innerText = "⚠️ PADRÃO QUEBRADO";
+            msgLabel.style.color = "#f44336";
+        } else {
+            statusBox.classList.remove('alerta-ativo');
+            msgLabel.innerText = "ANALISANDO...";
+            msgLabel.style.color = "#888";
+        }
+    }, 1000);
+</script>
+</body>
+</html>
