@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Radar Vela Rosa</title>
+    <style>
+        :root { --primary: #d32f2f; --bg: #0f0f0f; --card: #1a1a1a; --text: #e0e0e0; --green: #4caf50; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
+        .container { max-width: 500px; margin: auto; }
+        
+        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--card); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid #333; }
+        .stat-card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; }
+        .stat-card div { font-size: 16px; font-weight: bold; margin-top: 5px; color: var(--primary); }
+
+        .btn-trigger { background: var(--primary); color: white; border: none; padding: 35px 20px; width: 100%; border-radius: 20px; font-size: 22px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 8px 25px rgba(211, 47, 47, 0.4); margin-bottom: 15px; }
+        .btn-trigger:active { transform: scale(0.95); background: #b71c1c; }
+
+        #monitor-status { background: #222; padding: 25px; border-radius: 15px; text-align: center; border-left: 6px solid #444; margin-bottom: 20px; }
+        .alerta-ativo { border-left-color: var(--green) !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { background: #222; } 50% { background: #1b331c; } 100% { background: #222; } }
+
+        .history { background: #151515; padding: 15px; border-radius: 12px; height: 180px; overflow-y: auto; font-family: monospace; font-size: 13px; border: 1px solid #222; }
+        .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; }
+        .btn-small { background: transparent; color: #666; border: 1px solid #444; padding: 10px; border-radius: 8px; flex: 1; margin: 0 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 style="text-align: center; color: white;">RADAR VELA ROSA 🌸</h3>
+    
+    <div class="dashboard">
+        <div class="stat-card"><small>Média</small><div id="frequencia">-</div></div>
+        <div class="stat-card"><small>Último</small><div id="intervalo">-</div></div>
+        <div class="stat-card"><small>Próxima</small><div id="estimativa">--:--</div></div>
+    </div>
+
+    <button class="btn-trigger" onclick="registrar()">REGISTRAR 10X+</button>
+    
+    <div id="monitor-status">
+        <strong id="msg-status" style="font-size: 18px;">AGUARDANDO DADOS...</strong>
+        <p id="sub-status" style="font-size: 11px; color: #888; margin-top: 8px;">O robô analisará o padrão após 2 registros.</p>
+    </div>
+
+    <div style="display: flex; margin-bottom: 20px;">
+        <button class="btn-small" onclick="desfazer()">Desfazer</button>
+        <button class="btn-small" onclick="limpar()" style="color: #f44336;">Limpar Tudo</button>
+    </div>
+
+    <div class="history" id="historico"></div>
+</div>
+
+<script>
+    let registros = [];
+    let alertaEnviado = false;
+    
+    // Credenciais do RadarVelaRosa_Bot enviadas
+    const TOKEN = '7611634590:AAHo8X_T25T4S5K3e-7M4Vp_P9S_r7Y_zEw'; 
+    const CHAT_ID = '7091410915'; 
+
+    async function enviarTelegram(msg) {
+        const mensagemCompleta = `🌸 **ALERTA RADAR VELA ROSA** 🌸\n\n${msg}\n\n🕒 Hora: ${new Date().toLocaleTimeString('pt-BR')}`;
+        const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(mensagemCompleta)}&parse_mode=Markdown`;
+        try { 
+            await fetch(url); 
+        } catch(e) { 
+            console.error("Erro ao enviar para o Telegram"); 
+        }
+    }
+
+    function registrar() {
+        const agora = new Date();
+        registros.unshift(agora);
+        alertaEnviado = false;
+        analisar();
+        atualizarUI();
+    }
+
+    function analisar() {
+        if (registros.length < 2) return;
+        
+        let soma = 0;
+        for (let i = 0; i < registros.length - 1; i++) {
+            soma += (registros[i] - registros[i+1]);
+        }
+        
+        const mediaMs = soma / (registros.length - 1);
+        const mediaMin = (mediaMs / 60000).toFixed(1);
+        const ultimoInt = ((registros[0] - (registros[1] || registros[0])) / 60000).toFixed(1);
+        
+        document.getElementById('frequencia').innerText = mediaMin + "m";
+        document.getElementById('intervalo').innerText = ultimoInt + "m";
+        
+        const proxEst = new Date(registros[0].getTime() + mediaMs);
+        document.getElementById('estimativa').innerText = proxEst.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function atualizarUI() {
+        const histDiv = document.getElementById('historico');
+        histDiv.innerHTML = registros.map((d, i) => `
+            <div class="row"><span>Vela #${registros.length - i}</span> <span>${d.toLocaleTimeString()}</span></div>
+        `).join('');
+    }
+
+    function desfazer() { registros.shift(); analisar(); atualizarUI(); }
+    function limpar() { if(confirm("Deseja resetar todos os dados?")) { registros = []; location.reload(); } }
+
+    setInterval(() => {
+        if (registros.length < 2) return;
+        
+        const agora = new Date();
+        const soma = (registros[0] - registros[registros.length - 1]) / (registros.length - 1);
+        const tempoDesdeUltima = agora - registros[0];
+        
+        const statusBox = document.getElementById('monitor-status');
+        const msgLabel = document.getElementById('msg-status');
+
+        if (tempoDesdeUltima >= (soma - 60000) && tempoDesdeUltima <= (soma + 120000)) {
+            statusBox.classList.add('alerta-ativo');
+            msgLabel.innerText = "🔥 ZONA DE ALTA PROBABILIDADE";
+            msgLabel.style.color = "#4caf50";
+            
+            if (!alertaEnviado) {
+                enviarTelegram("🔥 **ZONA DE ROSA DETECTADA!**\nPrepare-se para a entrada agora.");
+                alertaEnviado = true;
+            }
+        } else if (tempoDesdeUltima > (soma + 120000)) {
+            statusBox.classList.remove('alerta-ativo');
+            msgLabel.innerText = "⚠️ PADRÃO QUEBRADO";
+            msgLabel.style.color = "#f44336";
+        } else {
+            statusBox.classList.remove('alerta-ativo');
+            msgLabel.innerText = "ANALISANDO FLUXO...";
+            msgLabel.style.color = "#888";
+        }
+    }, 1000);
+</script>
+</body>
+</html>
