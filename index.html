@@ -12,113 +12,33 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/861/861058.png">
 
     <style>
-        :root { 
-            --primary: #ff1744; 
-            --bg: #050505; 
-            --card: rgba(255, 255, 255, 0.05); 
-            --green: #00e676; 
-            --blue: #2979ff; 
-            --gold: #ffc107; 
-            --text: #ffffff; 
-            --whatsapp: #25d366;
-        }
-
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: radial-gradient(circle at top, #1a1a1a, #050505); 
-            color: var(--text); 
-            padding: 10px; margin: 0; 
-            text-align: center; user-select: none;
-        }
-        
-        .ad-container { 
-            width: 100%; min-height: 100px; background: rgba(0,0,0,0.5); 
-            margin-bottom: 10px; border: 1px dashed #333; 
-            display: flex; align-items: center; justify-content: center; 
-            overflow: hidden;
-        }
-
-        .clock-card { 
-            background: rgba(0, 0, 0, 0.6); padding: 20px; 
-            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); 
-            margin-bottom: 15px; position: relative; 
-        }
-
+        :root { --primary: #ff1744; --bg: #050505; --card: rgba(255, 255, 255, 0.05); --green: #00e676; --blue: #2979ff; --gold: #ffc107; --text: #ffffff; --whatsapp: #25d366; }
+        body { font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a1a1a, #050505); color: var(--text); padding: 10px; margin: 0; text-align: center; user-select: none; }
+        .ad-container { width: 100%; min-height: 100px; background: rgba(0,0,0,0.5); margin-bottom: 10px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .clock-card { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px; position: relative; }
         #clock { font-size: 42px; font-weight: 800; color: var(--green); font-family: monospace; }
-        
-        .btn-tips { 
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
-            background: var(--gold); border: none; border-radius: 50%; 
-            width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; 
-        }
-
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: var(--card); padding: 12px 8px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; margin-bottom: 5px; }
         .card .val { font-size: 16px; font-weight: bold; color: var(--primary); }
-
-        .btn-reg { 
-            background: linear-gradient(45deg, #ff1744, #d50000); color: white; 
-            border: none; padding: 22px; width: 100%; border-radius: 18px; 
-            font-size: 20px; font-weight: 900; text-transform: uppercase; 
-            cursor: pointer; margin-bottom: 15px; transition: 0.2s;
-        }
-        .btn-reg:active { transform: scale(0.95); }
-
+        .btn-reg { background: linear-gradient(45deg, #ff1744, #d50000); color: white; border: none; padding: 22px; width: 100%; border-radius: 18px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 15px; }
         .btn-growth { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn-share { 
-            flex: 1; background: var(--whatsapp); color: white; border: none; 
-            padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
-        }
-        .btn-affiliate { 
-            flex: 1; background: var(--blue); color: white; border: none; 
-            padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
-        }
-
-        #monitor { 
-            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 18px; 
-            font-size: 18px; font-weight: bold; color: #555; border: 1px dashed #333; margin-bottom: 15px; 
-        }
+        .btn-share { flex: 1; background: var(--whatsapp); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; }
+        .btn-affiliate { flex: 1; background: var(--blue); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; }
+        #monitor { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 18px; font-size: 18px; font-weight: bold; color: #555; border: 1px dashed #333; margin-bottom: 15px; }
         .status-active { background: rgba(0, 230, 118, 0.1) !important; color: var(--green) !important; border: 1px solid var(--green) !important; }
-        .status-break { background: rgba(255, 23, 68, 0.1) !important; color: var(--primary) !important; border: 1px solid var(--primary) !important; }
-
-        .history { 
-            background: rgba(0,0,0,0.3); border-radius: 15px; padding: 10px; 
-            height: 120px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); text-align: left; margin-bottom: 15px; 
-        }
+        .history { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 10px; height: 120px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); text-align: left; }
         .hist-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #1a1a1a; font-size: 12px; }
-
-        .btn-footer { display: flex; gap: 10px; }
-        .btn-sec { flex: 1; padding: 15px; border-radius: 12px; background: #222; border: 1px solid #333; color: white; font-weight: bold; cursor: pointer; }
-
-        /* MODAL DICAS */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; }
-        .modal-tips { 
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            background: #1a1a1a; border: 2px solid var(--gold); padding: 20px; border-radius: 20px; z-index: 1000; width: 85%; max-width: 320px;
-        }
-        .tip-item { margin-bottom: 12px; font-size: 14px; text-align: left; }
-        .tip-item b { color: var(--gold); display: block; }
     </style>
 </head>
 <body>
 
     <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-4393122733169100"
-             data-ad-slot="auto"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4393122733169100" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <div class="clock-card">
-        <div id="clock">00:00:00</div>
-        <button class="btn-tips" onclick="toggleTips()">💡</button>
-    </div>
+    <div class="clock-card"><div id="clock">00:00:00</div></div>
 
     <div class="grid">
         <div class="card"><small>MÉDIA</small><div class="val" id="media">0.0m</div></div>
@@ -129,62 +49,38 @@
     <button class="btn-reg" onclick="registrar()">REGISTRAR VELA ROSA</button>
 
     <div class="btn-growth">
-        <button class="btn-share" onclick="compartilhar()">🚀 INDICAR AMIGO</button>
-        <button class="btn-affiliate" onclick="window.open('COLOQUE_SEU_LINK_DE_AFILIADO_AQUI', '_blank')">💰 JOGAR AGORA</button>
+        <button class="btn-share" onclick="compartilhar()">🚀 INDICAR</button>
+        <button class="btn-affiliate" onclick="window.open('SEU_LINK_AQUI', '_blank')">💰 CADASTRAR</button>
     </div>
 
     <div id="monitor">AGUARDANDO REGISTRO...</div>
-
     <div class="history" id="lista"></div>
-
-    <div class="btn-footer">
-        <button class="btn-sec" onclick="anular()">Anular</button>
-        <button class="btn-sec" onclick="limpar()" style="color:var(--primary)">Resetar</button>
-    </div>
-
-    <div class="modal-overlay" id="overlay" onclick="toggleTips()"></div>
-    <div class="modal-tips" id="modalTips">
-        <h3 style="color:var(--gold)">ESTRATÉGIA ELITE</h3>
-        <div class="tip-item"><b>1. BANCA:</b> Entre com apenas 1% do seu capital.</div>
-        <div class="tip-item"><b>2. SINAL:</b> Prepare a aposta quando o monitor ficar VERDE.</div>
-        <div class="tip-item"><b>3. SAÍDA:</b> Recomenda-se tirar o lucro em 2.0x e deixar o resto subir.</div>
-        <button class="btn-sec" onclick="toggleTips()" style="width:100%; border-color: var(--gold)">FECHAR</button>
-    </div>
 
     <script>
         let registros = [];
         let alvo = null;
+        let avisouPreparar = false;
         let avisouEntrada = false;
-
-        function toggleTips() {
-            const m = document.getElementById('modalTips');
-            const o = document.getElementById('overlay');
-            const show = m.style.display === 'block';
-            m.style.display = show ? 'none' : 'block';
-            o.style.display = show ? 'none' : 'block';
-        }
-
-        function compartilhar() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Radar Pro Elite',
-                    text: 'Estou usando o Radar Pro Elite para pegar velas rosas! Use você também:',
-                    url: window.location.href
-                });
-            } else { alert("Copie o link: " + window.location.href); }
-        }
 
         function alerta(texto) {
             window.speechSynthesis.cancel();
             const m = new SpeechSynthesisUtterance(texto);
             m.lang = 'pt-BR';
+            m.rate = 1.1;
             window.speechSynthesis.speak(m);
         }
+
+        // Aviso inicial ao abrir o app
+        setTimeout(() => { alerta("Bem vindo ao Radar Elite. Cadastre-se na plataforma recomendada para operar."); }, 2000);
 
         function registrar() {
             const agora = new Date();
             registros.unshift(agora);
+            avisouPreparar = false;
             avisouEntrada = false;
+            
+            alerta("Vela registrada. Analisando próximo ciclo.");
+
             if (registros.length >= 2) {
                 let soma = 0;
                 for (let i = 0; i < registros.length - 1; i++) soma += (registros[i] - registros[i+1]);
@@ -203,22 +99,30 @@
             `).join('');
         }
 
-        function anular() { registros.shift(); atualizarUI(); }
-        function limpar() { if(confirm("Resetar?")) location.reload(); }
+        function compartilhar() {
+            if (navigator.share) { navigator.share({ title: 'Radar Elite', text: 'Use o Radar Elite:', url: window.location.href }); }
+        }
 
         setInterval(() => {
             const agora = new Date();
             document.getElementById('clock').innerText = agora.toLocaleTimeString('pt-BR');
-            if (alvo && registros.length >= 2) {
+            
+            if (alvo) {
                 const mon = document.getElementById('monitor');
-                const diff = (alvo - agora) / 1000;
-                if (diff < 45 && diff > -60) {
+                const diffSec = (alvo - agora) / 1000;
+
+                // Aviso de 1 minuto antes
+                if (diffSec <= 65 && diffSec > 55 && !avisouPreparar) {
+                    alerta("Atenção, prepare sua entrada para o próximo minuto.");
+                    avisouPreparar = true;
+                }
+
+                // Aviso de Entrada
+                if (diffSec < 45 && diffSec > -30) {
                     mon.className = 'status-active'; mon.innerText = "ENTRADA LIBERADA";
-                    if (!avisouEntrada) { alerta("Entrada liberada"); avisouEntrada = true; }
-                } else if (diff <= -60) {
-                    mon.className = 'status-break'; mon.innerText = "PADRÃO QUEBRADO";
-                } else {
-                    mon.className = ''; mon.innerText = "ANALISANDO CICLO...";
+                    if (!avisouEntrada) { alerta("Entrada liberada! Boa sorte."); avisouEntrada = true; }
+                } else if (diffSec <= -30) {
+                    mon.className = ''; mon.innerText = "AGUARDANDO NOVA VELA...";
                 }
             }
         }, 1000);
