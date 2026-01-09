@@ -7,15 +7,11 @@
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4393122733169100" crossorigin="anonymous"></script>
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ff1744">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/861/861058.png">
-
     <style>
         :root { --primary: #ff1744; --bg: #050505; --card: rgba(255, 255, 255, 0.05); --green: #00e676; --blue: #2979ff; --gold: #ffc107; --text: #ffffff; --whatsapp: #25d366; }
         body { font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a1a1a, #050505); color: var(--text); padding: 10px; margin: 0; text-align: center; user-select: none; }
-        .ad-container { width: 100%; min-height: 100px; background: rgba(0,0,0,0.5); margin-bottom: 10px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .clock-card { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px; position: relative; }
+        .ad-container { width: 100%; min-height: 100px; background: rgba(0,0,0,0.5); margin-bottom: 10px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; }
+        .clock-card { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px; }
         #clock { font-size: 42px; font-weight: 800; color: var(--green); font-family: monospace; }
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: var(--card); padding: 12px 8px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
@@ -27,6 +23,7 @@
         .btn-affiliate { flex: 1; background: var(--blue); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; }
         #monitor { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 18px; font-size: 18px; font-weight: bold; color: #555; border: 1px dashed #333; margin-bottom: 15px; }
         .status-active { background: rgba(0, 230, 118, 0.1) !important; color: var(--green) !important; border: 1px solid var(--green) !important; }
+        .status-break { background: rgba(255, 23, 68, 0.1) !important; color: var(--primary) !important; border: 1px solid var(--primary) !important; }
         .history { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 10px; height: 120px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); text-align: left; }
         .hist-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #1a1a1a; font-size: 12px; }
     </style>
@@ -50,7 +47,7 @@
 
     <div class="btn-growth">
         <button class="btn-share" onclick="compartilhar()">🚀 INDICAR</button>
-        <button class="btn-affiliate" onclick="window.open('SEU_LINK_AQUI', '_blank')">💰 CADASTRAR</button>
+        <button class="btn-affiliate" onclick="window.open('TEU_LINK_AQUI', '_blank')">💰 CADASTRAR</button>
     </div>
 
     <div id="monitor">AGUARDANDO REGISTRO...</div>
@@ -61,25 +58,21 @@
         let alvo = null;
         let avisouPreparar = false;
         let avisouEntrada = false;
+        let avisouQuebra = false;
 
         function alerta(texto) {
             window.speechSynthesis.cancel();
             const m = new SpeechSynthesisUtterance(texto);
             m.lang = 'pt-BR';
-            m.rate = 1.1;
             window.speechSynthesis.speak(m);
         }
-
-        // Aviso inicial ao abrir o app
-        setTimeout(() => { alerta("Bem vindo ao Radar Elite. Cadastre-se na plataforma recomendada para operar."); }, 2000);
 
         function registrar() {
             const agora = new Date();
             registros.unshift(agora);
-            avisouPreparar = false;
-            avisouEntrada = false;
+            avisouPreparar = false; avisouEntrada = false; avisouQuebra = false;
             
-            alerta("Vela registrada. Analisando próximo ciclo.");
+            alerta("Vela registrada. Analisando ciclo.");
 
             if (registros.length >= 2) {
                 let soma = 0;
@@ -100,7 +93,7 @@
         }
 
         function compartilhar() {
-            if (navigator.share) { navigator.share({ title: 'Radar Elite', text: 'Use o Radar Elite:', url: window.location.href }); }
+            if (navigator.share) { navigator.share({ title: 'Radar Elite', text: 'Usa o Radar Elite:', url: window.location.href }); }
         }
 
         setInterval(() => {
@@ -111,18 +104,26 @@
                 const mon = document.getElementById('monitor');
                 const diffSec = (alvo - agora) / 1000;
 
-                // Aviso de 1 minuto antes
+                // 1 minuto antes
                 if (diffSec <= 65 && diffSec > 55 && !avisouPreparar) {
-                    alerta("Atenção, prepare sua entrada para o próximo minuto.");
+                    alerta("Atenção, prepara a tua entrada.");
                     avisouPreparar = true;
                 }
 
-                // Aviso de Entrada
-                if (diffSec < 45 && diffSec > -30) {
+                // Entrada Liberada
+                if (diffSec < 45 && diffSec > -45) {
                     mon.className = 'status-active'; mon.innerText = "ENTRADA LIBERADA";
                     if (!avisouEntrada) { alerta("Entrada liberada! Boa sorte."); avisouEntrada = true; }
-                } else if (diffSec <= -30) {
-                    mon.className = ''; mon.innerText = "AGUARDANDO NOVA VELA...";
+                } 
+                // Quebra de Padrão (mais de 1 minuto de atraso)
+                else if (diffSec <= -60) {
+                    mon.className = 'status-break'; mon.innerText = "PADRÃO QUEBRADO";
+                    if (!avisouQuebra) { 
+                        alerta("Atenção: Padrão quebrado. Aguarde um novo ciclo."); 
+                        avisouQuebra = true; 
+                    }
+                } else {
+                    mon.className = ''; mon.innerText = "ANALISANDO...";
                 }
             }
         }, 1000);
