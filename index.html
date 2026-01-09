@@ -3,105 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Radar Vela Rosa</title>
+    <title>Radar Pro Elite</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff1744">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/861/861058.png">
+
     <style>
-        :root { --primary: #d32f2f; --bg: #0f0f0f; --card: #1a1a1a; --text: #e0e0e0; --green: #4caf50; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
-        .container { max-width: 500px; margin: auto; }
-        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: var(--card); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid #333; }
-        .stat-card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; }
-        .stat-card div { font-size: 16px; font-weight: bold; margin-top: 5px; color: var(--primary); }
-        .btn-trigger { background: var(--primary); color: white; border: none; padding: 35px 20px; width: 100%; border-radius: 20px; font-size: 22px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 8px 25px rgba(211, 47, 47, 0.4); margin-bottom: 15px; }
-        #monitor-status { background: #222; padding: 25px; border-radius: 15px; text-align: center; border-left: 6px solid #444; margin-bottom: 20px; }
-        .alerta-ativo { border-left-color: var(--green) !important; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { background: #222; } 50% { background: #1b331c; } 100% { background: #222; } }
-        .history { background: #151515; padding: 15px; border-radius: 12px; height: 180px; overflow-y: auto; font-family: monospace; font-size: 13px; border: 1px solid #222; }
-        .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; }
-        .btn-small { background: transparent; color: #666; border: 1px solid #444; padding: 10px; border-radius: 8px; flex: 1; margin: 0 5px; cursor: pointer; }
+        :root { 
+            --primary: #ff1744; 
+            --bg: #050505; 
+            --card: rgba(255, 255, 255, 0.05); 
+            --green: #00e676; 
+            --blue: #2979ff; 
+            --gold: #ffc107; 
+            --text: #ffffff; 
+            --whatsapp: #25d366;
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: radial-gradient(circle at top, #1a1a1a, #050505); 
+            color: var(--text); 
+            padding: 10px; margin: 0; 
+            text-align: center; user-select: none;
+        }
+        
+        /* BANNER AD */
+        .ad-container { 
+            width: 100%; min-height: 50px; background: #000; 
+            margin-bottom: 10px; border: 1px dashed #333; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 10px; color: #444; 
+        }
+
+        .clock-card { 
+            background: rgba(0, 0, 0, 0.6); padding: 20px; 
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); 
+            margin-bottom: 15px; position: relative; 
+        }
+
+        #clock { font-size: 42px; font-weight: 800; color: var(--green); font-family: monospace; }
+        
+        .btn-tips { 
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
+            background: var(--gold); border: none; border-radius: 50%; 
+            width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .card { background: var(--card); padding: 12px 8px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .card .val { font-size: 16px; font-weight: bold; color: var(--primary); }
+
+        /* BOTÕES PRINCIPAIS */
+        .btn-reg { 
+            background: linear-gradient(45deg, #ff1744, #d50000); color: white; 
+            border: none; padding: 22px; width: 100%; border-radius: 18px; 
+            font-size: 20px; font-weight: 900; text-transform: uppercase; 
+            cursor: pointer; margin-bottom: 15px; transition: 0.2s;
+        }
+        .btn-reg:active { transform: scale(0.95); }
+
+        /* CRESCIMENTO E AFILIADOS */
+        .btn-growth { display: flex; gap: 10px; margin-bottom: 15px; }
+        .btn-share { 
+            flex: 1; background: var(--whatsapp); color: white; border: none; 
+            padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+        }
+        .btn-affiliate { 
+            flex: 1; background: var(--blue); color: white; border: none; 
+            padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+        }
+
+        #monitor { 
+            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 18px; 
+            font-size: 18px; font-weight: bold; color: #555; border: 1px dashed #333; margin-bottom: 15px; 
+        }
+        .status-active { background: rgba(0, 230, 118, 0.1) !important; color: var(--green) !important; border: 1px solid var(--green) !important; }
+        .status-break { background: rgba(255, 23, 68, 0.1) !important; color: var(--primary) !important; border: 1px solid var(--primary) !important; }
+
+        .history { 
+            background: rgba(0,0,0,0.3); border-radius: 15px; padding: 10px; 
+            height: 120px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); text-align: left; margin-bottom: 15px; 
+        }
+        .hist-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #1a1a1a; font-size: 12px; }
+
+        .btn-footer { display: flex; gap: 10px; }
+        .btn-sec { flex: 1; padding: 15px; border-radius: 12px; background: #222; border: 1px solid #333; color: white; font-weight: bold; cursor: pointer; }
+
+        /* MODAL DICAS */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; }
+        .modal-tips { 
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: #1a1a1a; border: 2px solid var(--gold); padding: 20px; border-radius: 20px; z-index: 1000; width: 85%; max-width: 320px;
+        }
+        .tip-item { margin-bottom: 12px; font-size: 14px; text-align: left; }
+        .tip-item b { color: var(--gold); display: block; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h3 style="text-align: center; color: white;">RADAR VELA ROSA 🌸</h3>
-    <div class="dashboard">
-        <div class="stat-card"><small>Média</small><div id="frequencia">-</div></div>
-        <div class="stat-card"><small>Último</small><div id="intervalo">-</div></div>
-        <div class="stat-card"><small>Próxima</small><div id="estimativa">--:--</div></div>
+
+    <div class="ad-container">
+        ANÚNCIO GOOGLE ADS
     </div>
-    <button class="btn-trigger" onclick="registrar()">REGISTRAR 10X+</button>
-    <div id="monitor-status">
-        <strong id="msg-status" style="font-size: 18px;">AGUARDANDO DADOS...</strong>
+
+    <div class="clock-card">
+        <div id="clock">00:00:00</div>
+        <button class="btn-tips" onclick="toggleTips()">💡</button>
     </div>
-    <div style="display: flex; margin-bottom: 20px;">
-        <button class="btn-small" onclick="desfazer()">Desfazer</button>
-        <button class="btn-small" onclick="limpar()" style="color: #f44336;">Limpar Tudo</button>
+
+    <div class="grid">
+        <div class="card"><small>MÉDIA</small><div class="val" id="media">0.0m</div></div>
+        <div class="card"><small>GAP</small><div class="val" id="gap">0.0m</div></div>
+        <div class="card"><small>ALVO</small><div class="val" id="projecao">--:--</div></div>
     </div>
-    <div class="history" id="historico"></div>
-</div>
 
-<script>
-    let registros = [];
-    let alertaEnviado = false;
-    
-    // Novo Token e Chat ID validados
-    const TOKEN = '8571954149:AAGrOujOSR1EcYwA1yg2sJUbLBOf0Gd0mUs'; 
-    const CHAT_ID = '6757113885'; 
+    <button class="btn-reg" onclick="registrar()">REGISTRAR VELA ROSA</button>
 
-    async function enviarTelegram(msg) {
-        const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('🌸 RADAR VELA ROSA 🌸\n\n' + msg)}`;
-        try { 
-            const resp = await fetch(url);
-            const data = await resp.json();
-            if(data.ok) console.log("Mensagem enviada!");
-            else console.error("Erro no Telegram:", data.description);
-        } catch(e) { console.error("Erro na requisição"); }
-    }
+    <div class="btn-growth">
+        <button class="btn-share" onclick="compartilhar()">🚀 INDICAR AMIGO</button>
+        <button class="btn-affiliate" onclick="window.open('https://SEU-LINK-AQUI.com', '_blank')">💰 JOGAR AGORA</button>
+    </div>
 
-    function registrar() {
-        registros.unshift(new Date());
-        alertaEnviado = false;
-        analisar();
-        atualizarUI();
-    }
+    <div id="monitor">AGUARDANDO REGISTRO...</div>
 
-    function analisar() {
-        if (registros.length < 2) return;
-        let soma = 0;
-        for (let i = 0; i < registros.length - 1; i++) { soma += (registros[i] - registros[i+1]); }
-        const mediaMs = soma / (registros.length - 1);
-        document.getElementById('frequencia').innerText = (mediaMs / 60000).toFixed(1) + "m";
-        document.getElementById('intervalo').innerText = ((registros[0] - registros[1]) / 60000).toFixed(1) + "m";
-        document.getElementById('estimativa').innerText = new Date(registros[0].getTime() + mediaMs).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }
+    <div class="history" id="lista"></div>
 
-    function atualizarUI() {
-        document.getElementById('historico').innerHTML = registros.map((d, i) => `
-            <div class="row"><span>Vela #${registros.length - i}</span> <span>${d.toLocaleTimeString()}</span></div>
-        `).join('');
-    }
+    <div class="btn-footer">
+        <button class="btn-sec" onclick="anular()">Anular</button>
+        <button class="btn-sec" onclick="limpar()" style="color:var(--primary)">Resetar</button>
+    </div>
 
-    function desfazer() { if (registros.length > 0) { registros.shift(); analisar(); atualizarUI(); } }
-    function limpar() { if(confirm("Limpar dados?")) { registros = []; location.reload(); } }
+    <div class="modal-overlay" id="overlay" onclick="toggleTips()"></div>
+    <div class="modal-tips" id="modalTips">
+        <h3 style="color:var(--gold)">ESTRATÉGIA ELITE</h3>
+        <div class="tip-item"><b>1. BANCA:</b> Entre com apenas 1% do seu capital.</div>
+        <div class="tip-item"><b>2. SINAL:</b> Prepare a aposta quando o monitor ficar VERDE.</div>
+        <div class="tip-item"><b>3. SAÍDA:</b> Recomenda-se tirar o lucro em 2.0x e deixar o resto subir.</div>
+        <button class="btn-sec" onclick="toggleTips()" style="width:100%; border-color: var(--gold)">FECHAR</button>
+    </div>
 
-    setInterval(() => {
-        if (registros.length < 2) return;
-        const mediaMs = (registros[0] - registros[registros.length - 1]) / (registros.length - 1);
-        const tempoDecorrido = new Date() - registros[0];
-        const statusBox = document.getElementById('monitor-status');
-        const msgLabel = document.getElementById('msg-status');
+    <script>
+        let registros = [];
+        let alvo = null;
+        let audioCtx = null;
+        let avisouEntrada = false;
 
-        if (tempoDecorrido >= (mediaMs - 45000) && tempoDecorrido <= (mediaMs + 90000)) {
-            statusBox.classList.add('alerta-ativo');
-            msgLabel.innerText = "🔥 ZONA DE PROBABILIDADE";
-            msgLabel.style.color = "#4caf50";
-            if (!alertaEnviado) { enviarTelegram("ENTRADA LIBERADA!"); alertaEnviado = true; }
-        } else {
-            statusBox.classList.remove('alerta-ativo');
-            msgLabel.innerText = "ANALISANDO...";
-            msgLabel.style.color = "#888";
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => console.log("SW offline mode"));
         }
-    }, 1000);
-</script>
+
+        function toggleTips() {
+            const m = document.getElementById('modalTips');
+            const o = document.getElementById('overlay');
+            const show = m.style.display === 'block';
+            m.style.display = show ? 'none' : 'block';
+            o.style.display = show ? 'none' : 'block';
+        }
+
+        function compartilhar() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Radar Pro Elite',
+                    text: 'Pegue velas rosas com este radar gratuito!',
+                    url: window.location.href
+                });
+            } else { alert("Copie o link: " + window.location.href); }
+        }
+
+        function alerta(texto) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            window.speechSynthesis.cancel();
+            const m = new SpeechSynthesisUtterance(texto.replace(/Padrão/g, "Padron"));
+            m.lang = 'pt-BR';
+            window.speechSynthesis.speak(m);
+        }
+
+        function registrar() {
+            const agora = new Date();
+            registros.unshift(agora);
+            avisouEntrada = false;
+
+            if (registros.length >= 2) {
+                let soma = 0;
+                for (let i = 0; i < registros.length - 1; i++) soma += (registros[i] - registros[i+1]);
+                const mediaMs = soma / (registros.length - 1);
+                
+                document.getElementById('media').innerText = (mediaMs / 60000).toFixed(1) + "m";
+                document.getElementById('gap').innerText = ((registros[0] - registros[1]) / 60000).toFixed(1) + "m";
+                
+                alvo = new Date(registros[0].getTime() + mediaMs);
+                document.getElementById('projecao').innerText = alvo.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+            }
+            atualizarUI();
+        }
+
+        function atualizarUI() {
+            document.getElementById('lista').innerHTML = registros.map((d, i) => `
+                <div class="hist-row"><span>VELA #${registros.length - i}</span> <span>${d.toLocaleTimeString('pt-BR')}</span></div>
+            `).join('');
+        }
+
+        function anular() { registros.shift(); atualizarUI(); }
+        function limpar() { if(confirm("Resetar?")) location.reload(); }
+
+        setInterval(() => {
+            const agora = new Date();
+            document.getElementById('clock').innerText = agora.toLocaleTimeString('pt-BR');
+            
+            if (alvo && registros.length >= 2) {
+                const mon = document.getElementById('monitor');
+                const decorrido = agora - registros[0];
+                const diff = (alvo - agora) / 1000;
+
+                if (diff < 45 && diff > -60) {
+                    mon.className = 'status-active'; mon.innerText = "ENTRADA LIBERADA";
+                    if (!avisouEntrada) { alerta("Entrada liberada"); avisouEntrada = true; }
+                } else if (diff <= -60) {
+                    mon.className = 'status-break'; mon.innerText = "PADRÃO QUEBRADO";
+                } else {
+                    mon.className = ''; mon.innerText = "ANALISANDO CICLO...";
+                }
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
