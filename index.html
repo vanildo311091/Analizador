@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Radar Pro Elite</title>
     
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4393122733169100" crossorigin="anonymous"></script>
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ff1744">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/861/861058.png">
@@ -29,12 +31,11 @@
             text-align: center; user-select: none;
         }
         
-        /* BANNER AD */
         .ad-container { 
-            width: 100%; min-height: 50px; background: #000; 
+            width: 100%; min-height: 100px; background: rgba(0,0,0,0.5); 
             margin-bottom: 10px; border: 1px dashed #333; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 10px; color: #444; 
+            overflow: hidden;
         }
 
         .clock-card { 
@@ -56,7 +57,6 @@
         .card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; margin-bottom: 5px; }
         .card .val { font-size: 16px; font-weight: bold; color: var(--primary); }
 
-        /* BOTÕES PRINCIPAIS */
         .btn-reg { 
             background: linear-gradient(45deg, #ff1744, #d50000); color: white; 
             border: none; padding: 22px; width: 100%; border-radius: 18px; 
@@ -65,7 +65,6 @@
         }
         .btn-reg:active { transform: scale(0.95); }
 
-        /* CRESCIMENTO E AFILIADOS */
         .btn-growth { display: flex; gap: 10px; margin-bottom: 15px; }
         .btn-share { 
             flex: 1; background: var(--whatsapp); color: white; border: none; 
@@ -105,7 +104,15 @@
 <body>
 
     <div class="ad-container">
-        ANÚNCIO GOOGLE ADS
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-4393122733169100"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <div class="clock-card">
@@ -123,7 +130,7 @@
 
     <div class="btn-growth">
         <button class="btn-share" onclick="compartilhar()">🚀 INDICAR AMIGO</button>
-        <button class="btn-affiliate" onclick="window.open('https://SEU-LINK-AQUI.com', '_blank')">💰 JOGAR AGORA</button>
+        <button class="btn-affiliate" onclick="window.open('COLOQUE_SEU_LINK_DE_AFILIADO_AQUI', '_blank')">💰 JOGAR AGORA</button>
     </div>
 
     <div id="monitor">AGUARDANDO REGISTRO...</div>
@@ -147,13 +154,7 @@
     <script>
         let registros = [];
         let alvo = null;
-        let audioCtx = null;
         let avisouEntrada = false;
-
-        // PWA Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => console.log("SW offline mode"));
-        }
 
         function toggleTips() {
             const m = document.getElementById('modalTips');
@@ -167,16 +168,15 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'Radar Pro Elite',
-                    text: 'Pegue velas rosas com este radar gratuito!',
+                    text: 'Estou usando o Radar Pro Elite para pegar velas rosas! Use você também:',
                     url: window.location.href
                 });
             } else { alert("Copie o link: " + window.location.href); }
         }
 
         function alerta(texto) {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             window.speechSynthesis.cancel();
-            const m = new SpeechSynthesisUtterance(texto.replace(/Padrão/g, "Padron"));
+            const m = new SpeechSynthesisUtterance(texto);
             m.lang = 'pt-BR';
             window.speechSynthesis.speak(m);
         }
@@ -185,15 +185,12 @@
             const agora = new Date();
             registros.unshift(agora);
             avisouEntrada = false;
-
             if (registros.length >= 2) {
                 let soma = 0;
                 for (let i = 0; i < registros.length - 1; i++) soma += (registros[i] - registros[i+1]);
                 const mediaMs = soma / (registros.length - 1);
-                
                 document.getElementById('media').innerText = (mediaMs / 60000).toFixed(1) + "m";
                 document.getElementById('gap').innerText = ((registros[0] - registros[1]) / 60000).toFixed(1) + "m";
-                
                 alvo = new Date(registros[0].getTime() + mediaMs);
                 document.getElementById('projecao').innerText = alvo.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
             }
@@ -212,12 +209,9 @@
         setInterval(() => {
             const agora = new Date();
             document.getElementById('clock').innerText = agora.toLocaleTimeString('pt-BR');
-            
             if (alvo && registros.length >= 2) {
                 const mon = document.getElementById('monitor');
-                const decorrido = agora - registros[0];
                 const diff = (alvo - agora) / 1000;
-
                 if (diff < 45 && diff > -60) {
                     mon.className = 'status-active'; mon.innerText = "ENTRADA LIBERADA";
                     if (!avisouEntrada) { alerta("Entrada liberada"); avisouEntrada = true; }
