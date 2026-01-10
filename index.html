@@ -5,37 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Radar Pro Elite</title>
     
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4393122733169100" crossorigin="anonymous"></script>
+    <script src="https://pl28440913.effectivegatecpm.com/00/0d/81/000d8141b165d449d7846439266b0cfa.js"></script>
 
     <style>
         :root { --primary: #ff1744; --bg: #050505; --card: rgba(255, 255, 255, 0.05); --green: #00e676; --blue: #2979ff; --gold: #ffc107; --text: #ffffff; --whatsapp: #25d366; }
         body { font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a1a1a, #050505); color: var(--text); padding: 10px; margin: 0; text-align: center; user-select: none; }
-        .ad-container { width: 100%; min-height: 100px; background: rgba(0,0,0,0.5); margin-bottom: 10px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; }
-        .clock-card { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px; }
+        
+        /* Espaço para anúncios nativos se quiser adicionar depois */
+        .ad-spacer { width: 100%; min-height: 50px; margin-bottom: 10px; }
+
+        .clock-card { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px; position: relative; }
         #clock { font-size: 42px; font-weight: 800; color: var(--green); font-family: monospace; }
+        
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: var(--card); padding: 12px 8px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .card small { font-size: 9px; color: #888; text-transform: uppercase; display: block; margin-bottom: 5px; }
         .card .val { font-size: 16px; font-weight: bold; color: var(--primary); }
-        .btn-reg { background: linear-gradient(45deg, #ff1744, #d50000); color: white; border: none; padding: 22px; width: 100%; border-radius: 18px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 15px; }
+
+        .btn-reg { background: linear-gradient(45deg, #ff1744, #d50000); color: white; border: none; padding: 22px; width: 100%; border-radius: 18px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3); }
+        .btn-reg:active { transform: scale(0.95); }
+
         .btn-growth { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn-share { flex: 1; background: var(--whatsapp); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; }
-        .btn-affiliate { flex: 1; background: var(--blue); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; }
+        .btn-share { flex: 1; background: var(--whatsapp); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .btn-affiliate { flex: 1; background: var(--blue); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
         #monitor { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 18px; font-size: 18px; font-weight: bold; color: #555; border: 1px dashed #333; margin-bottom: 15px; }
         .status-active { background: rgba(0, 230, 118, 0.1) !important; color: var(--green) !important; border: 1px solid var(--green) !important; }
         .status-break { background: rgba(255, 23, 68, 0.1) !important; color: var(--primary) !important; border: 1px solid var(--primary) !important; }
+
         .history { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 10px; height: 120px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); text-align: left; }
         .hist-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #1a1a1a; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="ad-container">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4393122733169100" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
+    <div class="ad-spacer"></div>
 
-    <div class="clock-card"><div id="clock">00:00:00</div></div>
+    <div class="clock-card">
+        <div id="clock">00:00:00</div>
+    </div>
 
     <div class="grid">
         <div class="card"><small>MÉDIA</small><div class="val" id="media">0.0m</div></div>
@@ -46,11 +54,12 @@
     <button class="btn-reg" onclick="registrar()">REGISTRAR VELA ROSA</button>
 
     <div class="btn-growth">
-        <button class="btn-share" onclick="compartilhar()">🚀 INDICAR</button>
-        <button class="btn-affiliate" onclick="window.open('TEU_LINK_AQUI', '_blank')">💰 CADASTRAR</button>
+        <button class="btn-share" onclick="compartilhar()">🚀 INDICAR AMIGO</button>
+        <button class="btn-affiliate" onclick="window.open('#', '_blank')">💰 CADASTRAR</button>
     </div>
 
     <div id="monitor">AGUARDANDO REGISTRO...</div>
+
     <div class="history" id="lista"></div>
 
     <script>
@@ -70,7 +79,9 @@
         function registrar() {
             const agora = new Date();
             registros.unshift(agora);
-            avisouPreparar = false; avisouEntrada = false; avisouQuebra = false;
+            avisouPreparar = false; 
+            avisouEntrada = false; 
+            avisouQuebra = false;
             
             alerta("Vela registrada. Analisando ciclo.");
 
@@ -93,7 +104,9 @@
         }
 
         function compartilhar() {
-            if (navigator.share) { navigator.share({ title: 'Radar Elite', text: 'Usa o Radar Elite:', url: window.location.href }); }
+            if (navigator.share) {
+                navigator.share({ title: 'Radar Pro Elite', text: 'Estou ganhando com o Radar Elite! Use você também:', url: window.location.href });
+            }
         }
 
         setInterval(() => {
@@ -104,9 +117,9 @@
                 const mon = document.getElementById('monitor');
                 const diffSec = (alvo - agora) / 1000;
 
-                // 1 minuto antes
+                // Aviso: 1 minuto antes
                 if (diffSec <= 65 && diffSec > 55 && !avisouPreparar) {
-                    alerta("Atenção, prepara a tua entrada.");
+                    alerta("Atenção, prepare sua entrada para o próximo minuto.");
                     avisouPreparar = true;
                 }
 
@@ -115,7 +128,7 @@
                     mon.className = 'status-active'; mon.innerText = "ENTRADA LIBERADA";
                     if (!avisouEntrada) { alerta("Entrada liberada! Boa sorte."); avisouEntrada = true; }
                 } 
-                // Quebra de Padrão (mais de 1 minuto de atraso)
+                // Quebra de Padrão (atraso de mais de 1 minuto)
                 else if (diffSec <= -60) {
                     mon.className = 'status-break'; mon.innerText = "PADRÃO QUEBRADO";
                     if (!avisouQuebra) { 
@@ -123,7 +136,7 @@
                         avisouQuebra = true; 
                     }
                 } else {
-                    mon.className = ''; mon.innerText = "ANALISANDO...";
+                    mon.className = ''; mon.innerText = "ANALISANDO CICLO...";
                 }
             }
         }, 1000);
